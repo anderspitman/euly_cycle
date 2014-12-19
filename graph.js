@@ -125,3 +125,5 @@ var graphModule = (function() {
   }
 
 }());
+
+module.exports = graphModule;
