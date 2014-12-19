@@ -2,7 +2,6 @@
 var graphModule = (function() {
 
   var graph = {};
-  var nodes = [];
   var links = [];
 
   function indexOf(name, arr) {
@@ -12,10 +11,6 @@ var graphModule = (function() {
       }
     }
     return -1;
-  }
-
-  function buildNodes() {
-    nodes = graph.nodes;
   }
 
   function count(elem, arr) {
@@ -111,12 +106,11 @@ var graphModule = (function() {
 
   function publicSetData(new_graph) {
     graph = new_graph;
-    buildNodes();
     buildLinks();
   }
 
   function publicGetNodes() {
-    return nodes;
+    return graph.nodes;
   }
 
   function publicGetLinks() {
