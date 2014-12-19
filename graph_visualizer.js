@@ -91,10 +91,9 @@ d3.json("graph.json", function(error, json) {
     console.log(error);
   }
  
-  new_graph = graphModule.buildFromText(textBox.value);
-
-  graphModule.setData(new_graph);
-  //graphModule.setData(json);
+  //new_graph = graphModule.fromText(textBox.value);
+  //graphModule.setData(new_graph);
+  graphModule.setData(json);
   var nodes = graphModule.getNodes();
   var links = graphModule.getLinks();
 

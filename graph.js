@@ -84,8 +84,23 @@ var graphModule = (function() {
      }
      return idx;
   }
+
+  function publicFromTextWeighted(text, nodeSep) {
+    nodeSep = typeof nodeSep !== 'undefined' ? nodeSep : '->';
+    lines = text.split('\n');
+    new_graph = { "nodes": [], "edges": [] }
+    for (var i=0; i<lines.length; i++) {
+      line = lines[i].split(nodeSep);
+      source = line[0].trim();
+      target = line[1].trim().slice(0, line[1].indexOf(':'));
+      sourceIdx = addIfNew(source, new_graph);
+      targetIdx = addIfNew(target, new_graph);
+      new_graph.edges.push({ "source": sourceIdx, "target": targetIdx });
+    }
+    return new_graph;
+  };
   
-  function publicBuild(text, nodeSep, edgeSep) {
+  function publicFromText(text, nodeSep, edgeSep) {
     nodeSep = typeof nodeSep !== 'undefined' ? nodeSep : '->';
     edgeSep = typeof edgeSep !== 'undefined' ? edgeSep : ',';
     lines = text.split('\n');
@@ -121,7 +136,8 @@ var graphModule = (function() {
     setData: publicSetData,
     getNodes: publicGetNodes,
     getLinks: publicGetLinks,
-    buildFromText: publicBuild
+    fromText: publicFromText,
+    fromTextWeighted: publicFromTextWeighted
   }
 
 }());
