@@ -81,8 +81,8 @@ var default_graph_text = [
   '(AA TT) -> (CA GA)'
 ].join('\n');
 
-var textBox = document.querySelector("#text_box");
-textBox.value = default_graph_text;
+//var textBox = document.querySelector("#text_box");
+//textBox.value = default_graph_text;
 
 //var btn = document.querySelector("#graph_button");
 //btn.addEventListener("click", function() {
