@@ -41,8 +41,8 @@ svg.append("defs").append("marker")
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 20)
     .attr("refY", 0)
-    .attr("markerWidth", 8)
-    .attr("markerHeight", 8)
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
     .attr("orient", "auto")
     .append("path")
         .attr("d", "M0,-5L10,0L0,5Z");
@@ -54,8 +54,8 @@ svg.append("rect")
 
 var force = d3.layout.force()
     .gravity(.05)
-    .distance(50)
-    .charge(-1000)
+    .distance(200)
+    .charge(-2000)
     .size([width, height]);
 
 var drag = force.drag()
@@ -105,8 +105,14 @@ d3.json("graph.json", function(error, json) {
   var link = svg.selectAll(".link")
       .data(force.links())
     .enter().append("path")
+      .attr("id", function(d,i) { return "path"+i })
       .attr("class", "link")
       .attr("marker-end", "url(#arrowhead)");
+
+  svg.selectAll(".link").append("text")
+      .append("textPath")
+      .attr("xlink:href", function(d,i) { return "#path"+i })
+      .text("hi there");
 
   var node = svg.selectAll(".node")
       .data(nodes)
