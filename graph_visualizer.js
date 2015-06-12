@@ -81,19 +81,14 @@ var default_graph_text = [
   '(AA TT) -> (CA GA)'
 ].join('\n');
 
-//var textBox = document.querySelector("#text_box");
-//textBox.value = default_graph_text;
+var textBox = document.querySelector("#text_box");
+textBox.value = default_graph_text;
 
-//var btn = document.querySelector("#graph_button");
-//btn.addEventListener("click", function() {
-d3.json("graph.json", function(error, json) {
-  if (error) {
-    console.log(error);
-  }
- 
-  //new_graph = graphModule.fromText(textBox.value);
-  //graphModule.setData(new_graph);
-  graphModule.setData(json);
+var btn = document.querySelector("#graph_button");
+btn.addEventListener("click", function() {
+
+  new_graph = graphModule.fromText(textBox.value);
+  graphModule.setData(new_graph);
   var nodes = graphModule.getNodes();
   var links = graphModule.getLinks();
 
@@ -166,5 +161,3 @@ d3.json("graph.json", function(error, json) {
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     });
 });
-//});
-
