@@ -88,21 +88,34 @@ describe('edge', function() {
 
 describe('euly', function() {
   describe('eulerian cycle', function () {
-    it('works', function () {
+    it('simple', function () {
       var graphText = [
-        'a -> b, d, f',
-        'b -> c',
-        'c -> a',
-        'd -> e',
-        'e -> a',
-        'f -> g',
-        'g -> a',
+        'a -> b',
+        'b -> a'
       ].join('\n');
 
       var graph = new Graph(graphText);
       var cycler = new EulyCycler(graph);
 
-      cycler.eulerianCycle();
+      var cycle = cycler.eulerianCycle();
+
+      var expCycle = [new Node('a'), new Node('b'), new Node('a')];
+      assert.deepEqual(cycle, expCycle);
+    });
+
+    it('works', function () {
+      var graphText = [
+        'a -> b',
+        'b -> c, d',
+        'c -> a',
+        'd -> e',
+        'e -> b'
+      ].join('\n');
+
+      var graph = new Graph(graphText);
+      var cycler = new EulyCycler(graph);
+
+      var cycle = cycler.eulerianCycle();
     });
   });
 

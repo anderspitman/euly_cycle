@@ -10,14 +10,51 @@ var EulyCycler = function(graph) {
 
 EulyCycler.prototype.eulerianCycle = function() {
   var firstNode = this._graph.getNodes()[0];
-  var visited = this._walkUntilStuck(firstNode);
-  var nextOpen = this._findNodeWithOpenExit(visited);
+  var path = this._walkUntilStuck(firstNode);
+  console.log(path);
+  var nextOpen = this._findNodeWithOpenExit(path);
+  console.log("nextOpen:");
+  console.log(nextOpen);
+
+  var eulerianPath = [];
 
   while (nextOpen !== undefined) {
-    visited = this._walkUntilStuck(nextOpen);
-    nextOpen = this._findNodeWithOpenExit(visited);
+    eulerianPath = eulerianPath.concat(this._repath(path, nextOpen));
+    console.log(eulerianPath);
+    path = this._walkUntilStuck(nextOpen);
+    console.log(path);
+    nextOpen = this._findNodeWithOpenExit(path);
   }
 
+  eulerianPath = eulerianPath.concat(path.slice(1));
+  this.pathToString(eulerianPath);
+  return eulerianPath;
+};
+
+    //return path[path.index(start):] + path[:path.index(start)]
+
+EulyCycler.prototype._repath = function(path, newStart) {
+  var index = this._indexOfNode(path, newStart);
+  console.log(index);
+  var sliceIndexToEnd = path.slice(index, path.length-1);
+  var sliceBeginningToIndex = path.slice(0, index+1);
+  var newPath = sliceIndexToEnd.concat(sliceBeginningToIndex);
+  return newPath;
+};
+
+EulyCycler.prototype._indexOfNode = function (iterable, node) {
+  for (var i=0; i<iterable.length; i++) {
+    if (node.equals(iterable[i])) {
+      return i;
+    }
+  }
+};
+
+EulyCycler.prototype.pathToString = function(path) {
+  for (var i=0; i<path.length; i++) {
+    var node = path[i];
+    console.log(node.getName());
+  }
 };
 
 EulyCycler.prototype.getCurrentNode = function() {
@@ -60,8 +97,8 @@ EulyCycler.prototype._visit = function(edge) {
   this._visited.push(edge);
 };
 
-EulyCycler.prototype._nextUnvisited = function(startNode) {
-  var outgoingEdges = this._graph.getOutgoingEdges(startNode);
+EulyCycler.prototype._nextUnvisited = function(fromNode) {
+  var outgoingEdges = this._graph.getOutgoingEdges(fromNode);
 
   for (var i=0; i<outgoingEdges.length; i++) {
     var edge = outgoingEdges[i];
