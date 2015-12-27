@@ -22,6 +22,7 @@ EulyCycler.prototype.eulerianCycle = function() {
   }
 
   eulerianPath = eulerianPath.concat(path);
+  this._pathToString(eulerianPath);
   return eulerianPath;
 };
 
@@ -124,9 +125,12 @@ EulyCycler.prototype._indexOfNode = function (iterable, node) {
 };
 
 EulyCycler.prototype._pathToString = function(path) {
+  var string = '';
   for (var i=0; i<path.length; i++) {
     var node = path[i];
+    string += (node.getName() + '->');
   }
+  console.log(string);
 };
 
 
