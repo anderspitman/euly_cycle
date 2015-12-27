@@ -115,7 +115,11 @@ describe('euly', function() {
       var graph = new Graph(graphText);
       var cycler = new EulyCycler(graph);
 
+      var expCycle = [new Node('b'), new Node('c'), new Node('a'),
+                      new Node('b'), new Node('d'), new Node('e'),
+                      new Node('b')];
       var cycle = cycler.eulerianCycle();
+      assert.deepEqual(cycle, expCycle);
     });
   });
 
