@@ -70,10 +70,6 @@ EulyCycler.prototype._walkUntilStuck = function(startNode) {
   return visitedNodes;
 };
 
-EulyCycler.prototype._appendToEulerianPath = function(eulerianPath, newPath) {
-  return eulerianPath.concat(newPath.slice(0, newPath.length-1));
-};
-
 EulyCycler.prototype._mergePaths = function(path1, path2) {
   if (path1.length === 0) {
     return path2;

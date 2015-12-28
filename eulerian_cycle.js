@@ -7,8 +7,8 @@ var outfile = process.argv[3];
 
 var data = fs.readFileSync(infile, 'utf8').trim();
 
-var graph = new Graph(data);
-var cycler = new EulyCycler(graph);
+var graph = Graph.create(data);
+var cycler = EulyCycler.create(graph);
 
 var eulerianCycle = cycler.eulerianCycle();
 
