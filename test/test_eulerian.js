@@ -14,12 +14,12 @@ describe('euly', function() {
         'b -> a'
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
       var cycle = cycler.eulerianCycle();
 
-      var expCycle = [new Node('a'), new Node('b'), new Node('a')];
+      var expCycle = [Node.create('a'), Node.create('b'), Node.create('a')];
       assert.deepEqual(cycle, expCycle);
     });
 
@@ -32,12 +32,12 @@ describe('euly', function() {
         'e -> b'
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var expCycle = [new Node('b'), new Node('c'), new Node('a'),
-                      new Node('b'), new Node('d'), new Node('e'),
-                      new Node('b')];
+      var expCycle = [Node.create('b'), Node.create('c'), Node.create('a'),
+                      Node.create('b'), Node.create('d'), Node.create('e'),
+                      Node.create('b')];
       var cycle = cycler.eulerianCycle();
       assert.deepEqual(cycle, expCycle);
     });
@@ -56,15 +56,15 @@ describe('euly', function() {
         '9 -> 6'
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
       var cycle = cycler.eulerianCycle();
-      var expCycle = [new Node('6'), new Node('5'), new Node('4'),
-                      new Node('2'), new Node('1'), new Node('0'),
-                      new Node('3'), new Node('2'), new Node('6'),
-                      new Node('8'), new Node('7'), new Node('9'),
-                      new Node('6')];
+      var expCycle = [Node.create('6'), Node.create('5'), Node.create('4'),
+                      Node.create('2'), Node.create('1'), Node.create('0'),
+                      Node.create('3'), Node.create('2'), Node.create('6'),
+                      Node.create('8'), Node.create('7'), Node.create('9'),
+                      Node.create('6')];
 
       assert.deepEqual(cycle, expCycle);
     });
@@ -78,13 +78,13 @@ describe('euly', function() {
         'e -> c'
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
       var cycle = cycler.eulerianCycle();
-      var expCycle = [new Node('c'), new Node('a'), new Node('b'),
-                      new Node('d'), new Node('b'), new Node('c'),
-                      new Node('e'), new Node('c')];
+      var expCycle = [Node.create('c'), Node.create('a'), Node.create('b'),
+                      Node.create('d'), Node.create('b'), Node.create('c'),
+                      Node.create('e'), Node.create('c')];
 
       assert.deepEqual(cycle, expCycle);
     });
@@ -97,16 +97,16 @@ describe('euly', function() {
         'b -> d',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var node = new Node('a');
+      var node = Node.create('a');
       var path = cycler._walkUntilStuck(node);
 
-      var expPath = [new Node('a'), new Node('b'), new Node('d')];
+      var expPath = [Node.create('a'), Node.create('b'), Node.create('d')];
       var expVisited = [
-        new Edge(new Node('a'), new Node('b')),
-        new Edge(new Node('b'), new Node('d'))
+        Edge.create(Node.create('a'), Node.create('b')),
+        Edge.create(Node.create('b'), Node.create('d'))
       ];
 
       assert.deepEqual(path, expPath);
@@ -121,25 +121,25 @@ describe('euly', function() {
         'd -> e',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var node = new Node('a');
+      var node = Node.create('a');
       var path = cycler._walkUntilStuck(node);
 
       var expPath = [
-        new Node('a'),
-        new Node('b'),
-        new Node('c'),
-        new Node('d'),
-        new Node('e')
+        Node.create('a'),
+        Node.create('b'),
+        Node.create('c'),
+        Node.create('d'),
+        Node.create('e')
       ];
 
       var expVisited = [
-        new Edge(new Node('a'), new Node('b')),
-        new Edge(new Node('b'), new Node('c')),
-        new Edge(new Node('c'), new Node('d')),
-        new Edge(new Node('d'), new Node('e'))
+        Edge.create(Node.create('a'), Node.create('b')),
+        Edge.create(Node.create('b'), Node.create('c')),
+        Edge.create(Node.create('c'), Node.create('d')),
+        Edge.create(Node.create('d'), Node.create('e'))
       ];
 
       assert.deepEqual(path, expPath);
@@ -153,10 +153,10 @@ describe('euly', function() {
         'a -> b, c'
       ].join('\n');
 
-      graph = new Graph(graphText);
-      cycler = new EulyCycler(graph);
+      graph = Graph.create(graphText);
+      cycler = EulyCycler.create(graph);
 
-      var node = new Node('a');
+      var node = Node.create('a');
       cycler.setCurrentNode(node);
 
       assert(node.equals(cycler.getCurrentNode()));
@@ -169,14 +169,14 @@ describe('euly', function() {
         'a -> b, c'
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var node = new Node('a');
+      var node = Node.create('a');
       cycler.setCurrentNode(node);
-      var toNode = new Node('b');
+      var toNode = Node.create('b');
       cycler.goTo(toNode);
-      var expVisited = [new Edge(node, toNode)];
+      var expVisited = [Edge.create(node, toNode)];
 
       assert(toNode.equals(cycler.getCurrentNode()));
       assert.deepEqual(cycler.getVisited(), expVisited);
@@ -191,9 +191,9 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
-      var edge = new Edge(new Node('a'), new Node('b'));
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
+      var edge = Edge.create(Node.create('a'), Node.create('b'));
 
       assert(cycler._notVisited(edge));
     });
@@ -204,9 +204,9 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
-      var edge = new Edge(new Node('a'), new Node('b'));
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
+      var edge = Edge.create(Node.create('a'), Node.create('b'));
 
       cycler._visited.push(edge);
 
@@ -221,11 +221,11 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      startNode = new Node('a');
-      expUnvisited = new Edge(startNode, new Node('b'));
+      startNode = Node.create('a');
+      expUnvisited = Edge.create(startNode, Node.create('b'));
 
       var edge = cycler._nextUnvisited(startNode);
       assert.deepEqual(edge, expUnvisited);
@@ -239,13 +239,13 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var path1 = [new Node('a'), new Node('b'), new Node('c')];
-      var path2 = [new Node('c'), new Node('d'), new Node('e')];
-      var expPath = [new Node('a'), new Node('b'), new Node('c'),
-                     new Node('d'), new Node('e')];
+      var path1 = [Node.create('a'), Node.create('b'), Node.create('c')];
+      var path2 = [Node.create('c'), Node.create('d'), Node.create('e')];
+      var expPath = [Node.create('a'), Node.create('b'), Node.create('c'),
+                     Node.create('d'), Node.create('e')];
 
       var mergedPath = cycler._mergePaths(path1, path2);
 
@@ -259,11 +259,11 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
       var path1 = [];
-      var path2 = [new Node('a'), new Node('b'), new Node('c')];
+      var path2 = [Node.create('a'), Node.create('b'), Node.create('c')];
 
       var mergedPath = cycler._mergePaths(path1, path2);
 
@@ -277,10 +277,10 @@ describe('euly', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var cycler = new EulyCycler(graph);
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
 
-      var path1 = [new Node('a'), new Node('b'), new Node('c')];
+      var path1 = [Node.create('a'), Node.create('b'), Node.create('c')];
       var path2 = [];
 
       var mergedPath = cycler._mergePaths(path1, path2);

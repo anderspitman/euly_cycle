@@ -13,8 +13,8 @@ describe('graph', function() {
         'a -> b',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var expNodes = [new Node('a'), new Node('b')];
+      var graph = Graph.create(graphText);
+      var expNodes = [Node.create('a'), Node.create('b')];
 
       assert.deepEqual(graph.getNodes(), expNodes);
     });
@@ -26,7 +26,7 @@ describe('graph', function() {
         'a -> b',
       ].join('\n');
 
-      var graph = new Graph(graphText);
+      var graph = Graph.create(graphText);
       assert.deepEqual(graph._getGraph(), {'a': ['b'], 'b': []});
     });
 
@@ -35,7 +35,7 @@ describe('graph', function() {
         'a -> b, c',
       ].join('\n');
 
-      graph = new Graph(graphText);
+      graph = Graph.create(graphText);
       assert.deepEqual(graph._getGraph(), {'a': ['b', 'c'], 'b': [], 'c': []});
     });
 
@@ -45,7 +45,7 @@ describe('graph', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
+      var graph = Graph.create(graphText);
       var expGraph = {'a': ['b', 'c'], 'b': ['a', 'c'], 'c': []};
       assert.deepEqual(graph._getGraph(), expGraph);
     });
@@ -58,27 +58,50 @@ describe('graph', function() {
         'b -> a, c',
       ].join('\n');
 
-      var graph = new Graph(graphText);
-      var node = new Node('a');
+      var graph = Graph.create(graphText);
+      var node = Node.create('a');
       var outgoingEdges = graph.getOutgoingEdges(node);
       var expOutgoingEdges = [
-        new Edge(node, new Node('b')),
-        new Edge(node, new Node('c'))
+        Edge.create(node, Node.create('b')),
+        Edge.create(node, Node.create('c'))
       ];
 
-      //var expOutgoingEdges = [new Node('b'), new Node('c')];
+      //var expOutgoingEdges = [Node.create('b'), Node.create('c')];
       
       assert.deepEqual(outgoingEdges, expOutgoingEdges);
     });
   });
 });
 
+describe('node', function() {
+  describe('creation', function() {
+    it('works', function() {
+      var node = Node.create('a');
+
+      assert.equal('a', node.getName());
+    });
+
+    it('factory', function() {
+      var node = Node.create('a');
+      assert.equal('a', node.getName());
+    });
+  });
+});
 describe('edge', function() {
   describe('creation', function() {
     it('works', function() {
-      var fromNode = new Node('a');
-      var toNode = new Node('b');
-      var edge = new Edge(fromNode, toNode);
+      var fromNode = Node.create('a');
+      var toNode = Node.create('b');
+      var edge = Edge.create(fromNode, toNode);
+
+      assert.deepEqual(fromNode, edge.getFromNode());
+      assert.deepEqual(toNode, edge.getToNode());
+    });
+
+    it('factory', function() {
+      var fromNode = Node.create('a');
+      var toNode = Node.create('b');
+      var edge = Edge.create(fromNode, toNode);
 
       assert.deepEqual(fromNode, edge.getFromNode());
       assert.deepEqual(toNode, edge.getToNode());

@@ -8,6 +8,10 @@ var EulyCycler = function(graph) {
   this._visited = [];
 };
 
+EulyCycler.create = function(graph) {
+  return new EulyCycler(graph);
+};
+
 EulyCycler.prototype.eulerianCycle = function() {
   var eulerianPath = [];
   var firstNodeInGraph = this._graph.getNodes()[0];
@@ -41,7 +45,7 @@ EulyCycler.prototype.setCurrentNode = function(node) {
 EulyCycler.prototype.goTo = function(node) {
   var currentNode = this.getCurrentNode();
   this.setCurrentNode(node);
-  var edge = new Edge(currentNode, node);
+  var edge = Edge.create(currentNode, node);
   this._visit(edge);
   return edge;
 };

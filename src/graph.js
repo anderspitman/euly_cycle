@@ -2,6 +2,10 @@ var Node = function(name) {
   this._name = name;
 };
 
+Node.create = function(name) {
+  return new Node(name);
+};
+
 Node.isValid = function(node) {
   return node !== undefined;
 };
@@ -18,6 +22,10 @@ Node.prototype.equals = function(other) {
 var Edge = function(fromNode, toNode) {
   this._fromNode = fromNode;
   this._toNode = toNode;
+};
+
+Edge.create = function(fromNode, toNode) {
+  return new Edge(fromNode, toNode);
 };
 
 Edge.isValid = function(edge) {
@@ -39,6 +47,10 @@ Edge.prototype.equals = function(other) {
 
 var Graph = function(text) {
     this._graph = this._fromText(text);
+};
+
+Graph.create = function(text) {
+  return new Graph(text);
 };
 
 Graph.prototype.getNodes = function() {
