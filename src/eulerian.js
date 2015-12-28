@@ -9,16 +9,17 @@ var EulyCycler = function(graph) {
 };
 
 EulyCycler.prototype.eulerianCycle = function() {
-  var firstNode = this._graph.getNodes()[0];
-  var path = this._walkUntilStuck(firstNode);
-  var nextOpen = this._findNodeWithOpenExit(path);
   var eulerianPath = [];
+  var firstNode = this._graph.getNodes()[0];
 
-  while (nextOpen !== undefined) {
-    var newPath = this._repath(path, nextOpen);
-    eulerianPath = eulerianPath.concat(newPath.slice(0, newPath.length-1));
-    path = this._walkUntilStuck(nextOpen);
-    nextOpen = this._findNodeWithOpenExit(path);
+  var path = this._walkUntilStuck(firstNode);
+  var nextNodeWithOpenExit = this._findNodeWithOpenExit(path);
+
+  while (Node.isValid(nextNodeWithOpenExit)) {
+    var newPath = this._remakePathFromNewStartNode(path, nextNodeWithOpenExit);
+    eulerianPath = this._appendToEulerianPath(eulerianPath, newPath);
+    path = this._walkUntilStuck(nextNodeWithOpenExit);
+    nextNodeWithOpenExit = this._findNodeWithOpenExit(path);
   }
 
   eulerianPath = eulerianPath.concat(path);
@@ -52,7 +53,7 @@ EulyCycler.prototype._walkUntilStuck = function(startNode) {
   this.setCurrentNode(startNode);
   var unvisitedEdge = this._nextUnvisited(startNode);
 
-  while (unvisitedEdge !== undefined) {
+  while (Edge.isValid(unvisitedEdge)) {
     next = unvisitedEdge.getToNode();
     var edge = this.goTo(next);
     visitedNodes.push(next);
@@ -60,6 +61,10 @@ EulyCycler.prototype._walkUntilStuck = function(startNode) {
   }
 
   return visitedNodes;
+};
+
+EulyCycler.prototype._appendToEulerianPath = function(eulerianPath, newPath) {
+  return eulerianPath.concat(newPath.slice(0, newPath.length-1));
 };
 
 EulyCycler.prototype._visit = function(edge) {
@@ -108,7 +113,7 @@ EulyCycler.prototype._hasOpenExit = function(node) {
   return false;
 };
 
-EulyCycler.prototype._repath = function(path, newStart) {
+EulyCycler.prototype._remakePathFromNewStartNode = function(path, newStart) {
   var index = this._indexOfNode(path, newStart);
   var sliceIndexToEnd = path.slice(index, path.length-1);
   var sliceBeginningToIndex = path.slice(0, index+1);

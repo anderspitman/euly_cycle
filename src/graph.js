@@ -2,6 +2,10 @@ var Node = function(name) {
   this._name = name;
 };
 
+Node.isValid = function(node) {
+  return node !== undefined;
+};
+
 Node.prototype.getName = function() {
   return this._name;
 };
@@ -14,6 +18,10 @@ Node.prototype.equals = function(other) {
 var Edge = function(fromNode, toNode) {
   this._fromNode = fromNode;
   this._toNode = toNode;
+};
+
+Edge.isValid = function(edge) {
+  return edge !== undefined;
 };
 
 Edge.prototype.getFromNode = function() {

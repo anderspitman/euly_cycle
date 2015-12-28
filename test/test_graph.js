@@ -247,21 +247,21 @@ describe('euly', function() {
     });
   });
 
-  //describe('find next unvisited', function () {
-  //  it('works', function () {
-  //    var graphText = [
-  //      'a -> b, c',
-  //      'b -> a, c',
-  //    ].join('\n');
+  describe('find next unvisited', function () {
+    it('works', function () {
+      var graphText = [
+        'a -> b, c',
+        'b -> a, c',
+      ].join('\n');
 
-  //    var graph = new Graph(graphText);
-  //    var cycler = new EulyCycler(graph);
+      var graph = new Graph(graphText);
+      var cycler = new EulyCycler(graph);
 
-  //    startNode = new Node('a');
-  //    expUnvisited = new Edge(startNode, new Node('b'));
+      startNode = new Node('a');
+      expUnvisited = new Edge(startNode, new Node('b'));
 
-  //    var edge = cycler._nextUnvisited(startNode);
-  //    assert.deepEqual(edge, expUnvisited);
-  //  });
-  //});
+      var edge = cycler._nextUnvisited(startNode);
+      assert.deepEqual(edge, expUnvisited);
+    });
+  });
 });
