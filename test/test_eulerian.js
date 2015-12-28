@@ -288,4 +288,53 @@ describe('euly', function() {
       assert.deepEqual(mergedPath, path1);
     });
   });
+
+  describe('observe paths', function () {
+    it('simple - called once', function () {
+      var graphText = [
+        'a -> b',
+        'b -> a',
+      ].join('\n');
+
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
+
+      var obsPath = [];
+      cycler.addPathListener(function(path) {
+        obsPath = path
+      });
+
+      cycler.eulerianCycle();
+
+      var expPath = [Node.create('a'), Node.create('b'), Node.create('a')];
+
+      assert.deepEqual(obsPath, expPath);
+    });
+
+    it('called multiple times', function () {
+      var graphText = [
+        'a -> b',
+        'b -> a, c',
+        'c -> b'
+      ].join('\n');
+
+      var graph = Graph.create(graphText);
+      var cycler = EulyCycler.create(graph);
+
+      var obsPaths = [];
+      var timesCalled = 0;
+      cycler.addPathListener(function(path) {
+        console.log(path);
+        obsPaths.push(path)
+        timesCalled++;
+      });
+
+      cycler.eulerianCycle();
+
+      var expPaths = [[Node.create('a'), Node.create('b'), Node.create('a')],
+                      [Node.create('b'), Node.create('c'), Node.create('b')]];
+
+      assert.deepEqual(obsPaths, expPaths);
+    });
+  });
 });

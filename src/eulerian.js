@@ -6,6 +6,7 @@ var Edge = require('./graph').Edge;
 var EulyCycler = function(graph) {
   this._graph = graph;
   this._visited = [];
+  this._pathListeners = [];
 };
 
 EulyCycler.create = function(graph) {
@@ -19,6 +20,7 @@ EulyCycler.prototype.eulerianCycle = function() {
 
   while (true) {
     var path = this._walkUntilStuck(nextNodeWithOpenExit);
+    this._notifyPathListeners(path);
     var eulerianPath = this._mergePaths(eulerianPath, path);
     nextNodeWithOpenExit = this._findNodeWithOpenExit(eulerianPath);
 
@@ -32,6 +34,10 @@ EulyCycler.prototype.eulerianCycle = function() {
   }
 
   return eulerianPath;
+};
+
+EulyCycler.prototype.addPathListener = function(callback) {
+  this._pathListeners.push(callback);
 };
 
 EulyCycler.prototype.getCurrentNode = function() {
@@ -52,6 +58,13 @@ EulyCycler.prototype.goTo = function(node) {
 
 EulyCycler.prototype.getVisited = function(node) {
   return this._visited;
+};
+
+EulyCycler.prototype._notifyPathListeners = function(path) {
+  for (var i=0; i<this._pathListeners.length; i++) {
+    var listener = this._pathListeners[i];
+    listener(path);
+  }
 };
 
 EulyCycler.prototype._walkUntilStuck = function(startNode) {

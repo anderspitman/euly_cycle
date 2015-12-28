@@ -9,11 +9,14 @@ var data = fs.readFileSync(infile, 'utf8').trim();
 
 var graph = Graph.create(data);
 var cycler = EulyCycler.create(graph);
+cycler.addPathListener(function(path) {
+  console.log(path);
+});
 
 var eulerianCycle = cycler.eulerianCycle();
 
 var string = cycler.pathToString(eulerianCycle);
 string = string.slice(0, string.length-2);
-console.log(string);
+//console.log(string);
 
 fs.writeFileSync(outfile, string);
