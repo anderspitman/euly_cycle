@@ -10,20 +10,23 @@ var EulyCycler = function(graph) {
 
 EulyCycler.prototype.eulerianCycle = function() {
   var eulerianPath = [];
-  var firstNode = this._graph.getNodes()[0];
+  var firstNodeInGraph = this._graph.getNodes()[0];
+  var nextNodeWithOpenExit = firstNodeInGraph;
 
-  var path = this._walkUntilStuck(firstNode);
-  var nextNodeWithOpenExit = this._findNodeWithOpenExit(path);
+  while (true) {
+    var path = this._walkUntilStuck(nextNodeWithOpenExit);
+    var eulerianPath = this._mergePaths(eulerianPath, path);
+    nextNodeWithOpenExit = this._findNodeWithOpenExit(eulerianPath);
 
-  while (Node.isValid(nextNodeWithOpenExit)) {
-    var newPath = this._remakePathFromNewStartNode(path, nextNodeWithOpenExit);
-    eulerianPath = this._appendToEulerianPath(eulerianPath, newPath);
-    path = this._walkUntilStuck(nextNodeWithOpenExit);
-    nextNodeWithOpenExit = this._findNodeWithOpenExit(path);
+    if (Node.isValid(nextNodeWithOpenExit)) {
+      eulerianPath = this._remakePathFromNewStartNode(
+        eulerianPath, nextNodeWithOpenExit);
+    }
+    else {
+      break;
+    }
   }
 
-  eulerianPath = eulerianPath.concat(path);
-  this._pathToString(eulerianPath);
   return eulerianPath;
 };
 
@@ -65,6 +68,18 @@ EulyCycler.prototype._walkUntilStuck = function(startNode) {
 
 EulyCycler.prototype._appendToEulerianPath = function(eulerianPath, newPath) {
   return eulerianPath.concat(newPath.slice(0, newPath.length-1));
+};
+
+EulyCycler.prototype._mergePaths = function(path1, path2) {
+  if (path1.length === 0) {
+    return path2;
+  }
+  else if (path2.lenght === 0) {
+    return path1;
+  }
+  else {
+    return path1.concat(path2.slice(1));
+  }
 };
 
 EulyCycler.prototype._visit = function(edge) {
@@ -129,13 +144,13 @@ EulyCycler.prototype._indexOfNode = function (iterable, node) {
   }
 };
 
-EulyCycler.prototype._pathToString = function(path) {
+EulyCycler.prototype.pathToString = function(path) {
   var string = '';
   for (var i=0; i<path.length; i++) {
     var node = path[i];
     string += (node.getName() + '->');
   }
-  console.log(string);
+  return string;
 };
 
 
