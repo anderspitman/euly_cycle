@@ -78,7 +78,7 @@ EulyCycler.prototype._mergePaths = function(path1, path2) {
   if (path1.length === 0) {
     return path2;
   }
-  else if (path2.lenght === 0) {
+  else if (path2.length === 0) {
     return path1;
   }
   else {
