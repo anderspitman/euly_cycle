@@ -1,5 +1,5 @@
 
-var graphModule = (function() {
+var graphToD3 = (function() {
 
   var graph = {};
   var links = [];
@@ -126,4 +126,4 @@ var graphModule = (function() {
 
 }());
 
-module.exports = graphModule;
+module.exports = graphToD3;

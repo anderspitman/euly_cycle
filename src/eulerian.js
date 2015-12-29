@@ -39,8 +39,6 @@ EulyCycler.prototype.eulerianCycle = function() {
 EulyCycler.prototype.eulerianCycleIntermediate = function() {
   var intermediatePaths = [];
   this.addPathListener(function(path) {
-    console.log("called");
-    console.log(path);
     intermediatePaths.push(path);
   });
 
