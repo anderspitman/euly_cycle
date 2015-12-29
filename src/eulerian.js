@@ -20,7 +20,7 @@ EulyCycler.prototype.eulerianCycle = function() {
 
   while (true) {
     var path = this._walkUntilStuck(nextNodeWithOpenExit);
-    var eulerianPath = this._mergePaths(eulerianPath, path);
+    eulerianPath = this._mergePaths(eulerianPath, path);
     this._notifyPathListeners(eulerianPath);
     nextNodeWithOpenExit = this._findNodeWithOpenExit(eulerianPath);
 

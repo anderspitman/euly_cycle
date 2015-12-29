@@ -39,7 +39,7 @@ var graphToD3 = (function() {
   }
 
   function buildLinks() {
-      counts = {}
+      var counts = {};
       for (var i=0; i<graph.edges.length; i+=1) {
         edge = graph.edges[i];
         count_key = build_count_key(edge);
@@ -55,11 +55,11 @@ var graphToD3 = (function() {
         var count_idx = counts[count_key].count - 1;
         var curve_weight = (1.0 / possible) * 
           ((counts[count_key].count + (counts[count_key].count % 2)) / 2);
-        if (possible === 1 || ((possible % 2 != 0) && count_idx === possible-1)) {
+        if (possible === 1 || ((possible % 2 !== 0) && count_idx === possible-1)) {
           curve_type = 'straight';
         }
         else {
-          if (count_idx % 2 == 0) {
+          if (count_idx % 2 === 0) {
             curve_type = 'left';
           }
           else {
@@ -88,22 +88,22 @@ var graphToD3 = (function() {
   function publicFromText(text, nodeSep, edgeSep) {
     nodeSep = typeof nodeSep !== 'undefined' ? nodeSep : '->';
     edgeSep = typeof edgeSep !== 'undefined' ? edgeSep : ',';
-    lines = text.split('\n');
-    new_graph = { "nodes": [], "edges": [] }
+    var lines = text.split('\n');
+    var new_graph = { "nodes": [], "edges": [] };
     for (var i=0; i<lines.length; i++) {
-      line = lines[i].split(nodeSep);
-      node = line[0].trim();
-      sourceIdx = addIfNew(node, new_graph);
-      outlinks = line[1].split(edgeSep);
+      var line = lines[i].split(nodeSep);
+      var node = line[0].trim();
+      var sourceIdx = addIfNew(node, new_graph);
+      var outlinks = line[1].split(edgeSep);
       for (var j=0; j<outlinks.length; j++) {
        outlinks[j] = outlinks[j].trim();
-       targetIdx = addIfNew(outlinks[j], new_graph);
+       var targetIdx = addIfNew(outlinks[j], new_graph);
        new_graph.edges.push({ "source": sourceIdx, "target": targetIdx });
       }
     }
     setData(new_graph);
     buildLinks();
-  };
+  }
 
   function setData(new_graph) {
     graph = new_graph;
@@ -122,7 +122,7 @@ var graphToD3 = (function() {
     getNodes: publicGetNodes,
     getLinks: publicGetLinks,
     setFromText: publicFromText
-  }
+  };
 
 }());
 

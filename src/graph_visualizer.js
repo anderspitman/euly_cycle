@@ -16,7 +16,7 @@ var graphText = [
   '9 -> 6'
 ].join('\n');
 
-var textBox = d3.select('#text_box')
+var textBox = d3.select('#text_box');
 textBox.text(graphText);
 
 d3.select('#run_button').on("click", function() {
@@ -36,7 +36,7 @@ function changeColor(paths, pathIdx, nodeIdx) {
   
   circles.style("fill", "green");
   setTimeout(function() {
-    circles.style("fill", "grey")
+    circles.style("fill", "grey");
   }, 200);
 
   setTimeout(function() {
@@ -91,7 +91,7 @@ d3.select('#graph_button').on('click', function() {
       .attr("height", height);
 
   var force = d3.layout.force()
-      .gravity(.05)
+      .gravity(0.05)
       .distance(200)
       .charge(-2000)
       .size([width, height])
@@ -117,14 +117,14 @@ d3.select('#graph_button').on('click', function() {
   var link = svg.selectAll(".link")
       .data(force.links())
     .enter().append("path")
-      .attr("id", function(d,i) { return "path"+i })
+      .attr("id", function(d,i) { return "path"+i; })
       .attr("class", "link")
       .attr("marker-end", "url(#arrowhead)");
 
   var node = svg.selectAll(".node")
       .data(nodes)
     .enter().append("g")
-      .attr("id", function(d,i) { return "node_" + d.name })
+      .attr("id", function(d,i) { return "node_" + d.name; })
       .attr("class", "node")
       .call(drag);
 
@@ -135,12 +135,12 @@ d3.select('#graph_button').on('click', function() {
   node.append("text")
       .attr("dx", 12)
       .attr("dy", ".35em")
-      .text(function(d) { return d.name });
+      .text(function(d) { return d.name; });
 
   function zoom() {
     svg.attr(
       "transform",
-      "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+      "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   }
 });
 
