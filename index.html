@@ -1,14 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="dest/bundle.js"></script>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.5px;
+  opacity: 0.4;
+}
+.node text {
+  pointer-events: none;
+  font: 10px sans-serif;
+}
+
+.node circle {
+  fill: steelblue;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.center-container {
+  width: 960px;
+  margin: auto;
+}
+
+.header {
+  text-align: center;
+}
+
+.graph-wrapper {
+  height: 544px;
+  width: 100%;
+  border: 2px solid;
+}
+
+.instructions {
+  font-size: 24px;
+}
+
+.github-link {
+  font-size: 32px;
+}
+
+</style>
 </head>
 
 <body>
-    <textarea id="text_box" rows="30" cols="80"></textarea>
-    <input id="run_button" type="button" value="Run"></input>
-</body>
+<div class='header'>
+  <h1>Graph Visualizer</h1>
+</div>
+<div class='center-container'>
+  <div class='graph-wrapper'></div>
+  <br>
+  <button id='graph_button'>Graph Data</button>
+  <button id='run_button'>Run Cycler</button>
+  <br>
+  <textarea id="text_box" rows="20" cols="120"></textarea>
+  <br>
+  <br>
+  <div class='instructions'><b>Refresh the page between graphs</b></div>
+  <br>
+  <div class='instructions'><b>Zoom:</b> mouse wheel</div>
+  <br>
+  <div class='instructions'><b>Pan:</b> click empty area and drag</div>
+  <br>
+  <div class='instructions'><b>Manipulate node positions:</b> click node and drag</div>
+</div>
 
+<script src="d3/d3.min.js"></script>
+<script src="dest/bundle.js"></script>
+
+</body>
 </html>

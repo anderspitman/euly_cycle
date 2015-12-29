@@ -321,18 +321,13 @@ describe('euly', function() {
       var graph = Graph.create(graphText);
       var cycler = EulyCycler.create(graph);
 
-      var obsPaths = [];
-      var timesCalled = 0;
-      cycler.addPathListener(function(path) {
-        console.log(path);
-        obsPaths.push(path)
-        timesCalled++;
-      });
+      var obsPaths = cycler.eulerianCycleIntermediate();
 
-      cycler.eulerianCycle();
-
-      var expPaths = [[Node.create('a'), Node.create('b'), Node.create('a')],
-                      [Node.create('b'), Node.create('c'), Node.create('b')]];
+      var expPaths = [
+        [Node.create('a'), Node.create('b'), Node.create('a')],
+        [Node.create('b'), Node.create('a'), Node.create('b'),
+         Node.create('c'), Node.create('b')]
+      ];
 
       assert.deepEqual(obsPaths, expPaths);
     });

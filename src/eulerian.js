@@ -20,8 +20,8 @@ EulyCycler.prototype.eulerianCycle = function() {
 
   while (true) {
     var path = this._walkUntilStuck(nextNodeWithOpenExit);
-    this._notifyPathListeners(path);
     var eulerianPath = this._mergePaths(eulerianPath, path);
+    this._notifyPathListeners(eulerianPath);
     nextNodeWithOpenExit = this._findNodeWithOpenExit(eulerianPath);
 
     if (Node.isValid(nextNodeWithOpenExit)) {
@@ -34,6 +34,18 @@ EulyCycler.prototype.eulerianCycle = function() {
   }
 
   return eulerianPath;
+};
+
+EulyCycler.prototype.eulerianCycleIntermediate = function() {
+  var intermediatePaths = [];
+  this.addPathListener(function(path) {
+    console.log("called");
+    console.log(path);
+    intermediatePaths.push(path);
+  });
+
+  this.eulerianCycle();
+  return intermediatePaths;
 };
 
 EulyCycler.prototype.addPathListener = function(callback) {
