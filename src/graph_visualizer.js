@@ -3,6 +3,12 @@ var Graph = require('./graph').Graph;
 var EulyCycler = require('./eulerian');
 
 
+var startColor = 'steelblue';
+var activeColor = 'tomato';
+var visitedColor = 'DarkSeaGreen';
+var delayBetween = 1000;
+var circleRadius = 10;
+
 var graphText = [
   '0 -> 3',
   '1 -> 0',
@@ -16,11 +22,12 @@ var graphText = [
   '9 -> 6'
 ].join('\n');
 
+
 var textBox = d3.select('#text_box');
 textBox.text(graphText);
 
 d3.select('#run_button').on("click", function() {
-  d3.selectAll("circle").style("fill", "blue");
+  d3.selectAll("circle").style("fill", startColor);
 
   var graph = Graph.create(textBox.text());
   var cycler = EulyCycler.create(graph);
@@ -32,12 +39,17 @@ function changeColor(paths, pathIdx, nodeIdx) {
   var path = paths[pathIdx];
   var node = path[nodeIdx];
   var selector = '#node_' + node.getName();
-  var circles = d3.select(selector).select("circle");
+  var circle = d3.select(selector).select("circle");
   
-  circles.style("fill", "green");
-  setTimeout(function() {
-    circles.style("fill", "grey");
-  }, 200);
+  circle
+    .transition()
+    .duration(400)
+    .style("fill", activeColor)
+    .transition()
+    .style("fill", visitedColor);
+  //setTimeout(function() {
+  //  circle.style("fill", "grey");
+  //}, 200);
 
   setTimeout(function() {
     var nextNodeIdx = -1;
@@ -46,6 +58,10 @@ function changeColor(paths, pathIdx, nodeIdx) {
     if (nodeIdx === path.length - 1) {
       nextNodeIdx = 0;
       nextPathIdx = pathIdx + 1; 
+      d3.selectAll("circle")
+        .transition()
+        .delay(200)
+        .style("fill", startColor);
       if (nextPathIdx === paths.length) {
         return;
       }
@@ -54,11 +70,13 @@ function changeColor(paths, pathIdx, nodeIdx) {
       nextNodeIdx = nodeIdx + 1;
     }
     changeColor(paths, nextPathIdx, nextNodeIdx);
-  }, 200);
+  }, delayBetween);
 }
 
 
-d3.select('#graph_button').on('click', function() {
+d3.select('#graph_button').on('click', doGraph);
+    
+function doGraph() {
 
   var new_graph = graphToD3.setFromText(textBox.text());
   var nodes = graphToD3.getNodes();
@@ -91,8 +109,8 @@ d3.select('#graph_button').on('click', function() {
       .attr("height", height);
 
   var force = d3.layout.force()
-      .gravity(0.05)
-      .distance(200)
+      .gravity(.1)
+      .distance(50)
       .charge(-2000)
       .size([width, height])
       .nodes(nodes)
@@ -129,11 +147,11 @@ d3.select('#graph_button').on('click', function() {
       .call(drag);
 
   node.append("circle")
-      .style("fill", 'blue')
-      .attr("r", 10);
+      .style("fill", startColor)
+      .attr("r", circleRadius);
 
   node.append("text")
-      .attr("dx", 12)
+      .attr("dx", circleRadius + 2)
       .attr("dy", ".35em")
       .text(function(d) { return d.name; });
 
@@ -142,7 +160,7 @@ d3.select('#graph_button').on('click', function() {
       "transform",
       "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   }
-});
+}
 
 
 function dragstarted(d) {
@@ -181,3 +199,5 @@ function linkArc(d) {
     }
   }
 }
+
+doGraph();
