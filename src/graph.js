@@ -1,113 +1,119 @@
-var Node = function(name) {
-  this._name = name;
-};
-
-Node.create = function(name) {
-  return new Node(name);
-};
-
-Node.isValid = function(node) {
-  return node !== undefined;
-};
-
-Node.prototype.getName = function() {
-  return this._name;
-};
-
-Node.prototype.equals = function(other) {
-  return this._name === other._name;
-};
+(function() {
+  "use strict";
 
 
-var Edge = function(fromNode, toNode) {
-  this._fromNode = fromNode;
-  this._toNode = toNode;
-};
+  var Node = function(name) {
+    this._name = name;
+  };
 
-Edge.create = function(fromNode, toNode) {
-  return new Edge(fromNode, toNode);
-};
+  Node.create = function(name) {
+    return new Node(name);
+  };
 
-Edge.isValid = function(edge) {
-  return edge !== undefined;
-};
+  Node.isValid = function(node) {
+    return node !== undefined;
+  };
 
-Edge.prototype.getFromNode = function() {
-  return this._fromNode;
-};
+  Node.prototype.getName = function() {
+    return this._name;
+  };
 
-Edge.prototype.getToNode = function() {
-  return this._toNode;
-};
+  Node.prototype.equals = function(other) {
+    return this._name === other._name;
+  };
 
-Edge.prototype.equals = function(other) {
-  return this._fromNode.equals(other._fromNode) &&
-         this._toNode.equals(other._toNode);
-};
 
-var Graph = function(text) {
-    this._graph = this._fromText(text);
-};
+  var Edge = function(fromNode, toNode) {
+    this._fromNode = fromNode;
+    this._toNode = toNode;
+  };
 
-Graph.create = function(text) {
-  return new Graph(text);
-};
+  Edge.create = function(fromNode, toNode) {
+    return new Edge(fromNode, toNode);
+  };
 
-Graph.prototype.getNodes = function() {
-  var keys = Object.keys(this._graph);
-  var nodes = [];
-  for (var i=0; i<keys.length; i++) {
-    nodes.push(new Node(keys[i]));
-  }
-  return nodes;
-};
+  Edge.isValid = function(edge) {
+    return edge !== undefined;
+  };
 
-Graph.prototype.getOutgoingEdges = function(fromNode) {
-  var outlinks = this._graph[fromNode.getName()];
+  Edge.prototype.getFromNode = function() {
+    return this._fromNode;
+  };
 
-  edges = [];
-  for (var i=0; i<outlinks.length; i++) {
-    var outlink = outlinks[i];
-    edge = new Edge(fromNode, new Node(outlink));
-    edges.push(edge);
-  }
-  return edges;
-};
+  Edge.prototype.getToNode = function() {
+    return this._toNode;
+  };
 
-Graph.prototype._fromText = function(text, nodeSep, edgeSep) {
-  nodeSep = typeof nodeSep !== 'undefined' ? nodeSep : '->';
-  edgeSep = typeof edgeSep !== 'undefined' ? edgeSep : ',';
-  var lines = text.split('\n');
-  var graph = {};
-  for (var i=0; i<lines.length; i++) {
-    var line = lines[i].split(nodeSep);
-    var node = line[0].trim();
-    this._addIfNew(graph, node);
-    var outlinks = line[1].split(edgeSep);
-    for (var j=0; j<outlinks.length; j++) {
-      outlinks[j] = outlinks[j].trim();
-      this._addIfNew(graph, outlinks[j]);
+  Edge.prototype.equals = function(other) {
+    return this._fromNode.equals(other._fromNode) &&
+           this._toNode.equals(other._toNode);
+  };
+
+  var Graph = function(text) {
+      this._graph = this._fromText(text);
+  };
+
+  Graph.create = function(text) {
+    return new Graph(text);
+  };
+
+  Graph.prototype.getNodes = function() {
+    var keys = Object.keys(this._graph);
+    var nodes = [];
+    for (var i=0; i<keys.length; i++) {
+      nodes.push(new Node(keys[i]));
     }
-    graph[node] = outlinks;
-  }
+    return nodes;
+  };
 
-  return graph;
-};
+  Graph.prototype.getOutgoingEdges = function(fromNode) {
+    var outlinks = this._graph[fromNode.getName()];
 
-Graph.prototype._addIfNew = function(graph, key) {
-   idx = Object.keys(graph).indexOf(key);
-   if (idx === -1) {
-     graph[key] = [];
-     idx = graph.length-1;
-   }
-   return idx;
-};
+    var edges = [];
+    for (var i=0; i<outlinks.length; i++) {
+      var outlink = outlinks[i];
+      var edge = new Edge(fromNode, new Node(outlink));
+      edges.push(edge);
+    }
+    return edges;
+  };
+
+  Graph.prototype._fromText = function(text, nodeSep, edgeSep) {
+    nodeSep = typeof nodeSep !== 'undefined' ? nodeSep : '->';
+    edgeSep = typeof edgeSep !== 'undefined' ? edgeSep : ',';
+    var lines = text.split('\n');
+    var graph = {};
+    for (var i=0; i<lines.length; i++) {
+      var line = lines[i].split(nodeSep);
+      var node = line[0].trim();
+      this._addIfNew(graph, node);
+      var outlinks = line[1].split(edgeSep);
+      for (var j=0; j<outlinks.length; j++) {
+        outlinks[j] = outlinks[j].trim();
+        this._addIfNew(graph, outlinks[j]);
+      }
+      graph[node] = outlinks;
+    }
+
+    return graph;
+  };
+
+  Graph.prototype._addIfNew = function(graph, key) {
+     var idx = Object.keys(graph).indexOf(key);
+     if (idx === -1) {
+       graph[key] = [];
+       idx = graph.length-1;
+     }
+     return idx;
+  };
 
 
-Graph.prototype._getGraph = function() {
-    return this._graph;
-};
+  Graph.prototype._getGraph = function() {
+      return this._graph;
+  };
 
-module.exports.Graph = Graph;
-module.exports.Node = Node;
-module.exports.Edge = Edge;
+  module.exports.Graph = Graph;
+  module.exports.Node = Node;
+  module.exports.Edge = Edge;
+
+}());

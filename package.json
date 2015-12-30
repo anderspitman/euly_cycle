@@ -7,8 +7,10 @@
     "test": "mocha test/",
     "test:watch": "npm run test -- -w",
     "lint": "jshint src/*.js",
+    "lint:watch": "watch 'npm run lint' src/",
     "watchify": "watchify src/*.js -o dest/bundle.js -v",
     "browserify": "browserify src/*.js -o dest/bundle.js",
+    "browserify:watch": "watch 'npm run browserify' src/",
     "build": "npm run lint && npm test && npm run browserify",
     "clean": "rm -r dest/*"
   },
