@@ -103,14 +103,16 @@ describe('euly', function() {
       var node = Node.create('a');
       var path = cycler._walkUntilStuck(node);
 
-      var expPath = [Node.create('a'), Node.create('b'), Node.create('d')];
-      var expVisited = [
-        Edge.create(Node.create('a'), Node.create('b')),
-        Edge.create(Node.create('b'), Node.create('d'))
-      ];
+      var na = Node.create('a'),
+          nb = Node.create('b'),
+          nd = Node.create('d');
+
+      var eab = Edge.create(na, nb),
+          ebd = Edge.create(nb, nd);
+
+      var expPath = [eab, ebd];
 
       assert.deepEqual(path, expPath);
-      assert.deepEqual(cycler.getVisited(), expVisited);
     });
 
     it('long', function () {
@@ -127,23 +129,20 @@ describe('euly', function() {
       var node = Node.create('a');
       var path = cycler._walkUntilStuck(node);
 
-      var expPath = [
-        Node.create('a'),
-        Node.create('b'),
-        Node.create('c'),
-        Node.create('d'),
-        Node.create('e')
-      ];
+      var na = Node.create('a'),
+          nb = Node.create('b'),
+          nc = Node.create('c'),
+          nd = Node.create('d'),
+          ne = Node.create('e');
 
-      var expVisited = [
-        Edge.create(Node.create('a'), Node.create('b')),
-        Edge.create(Node.create('b'), Node.create('c')),
-        Edge.create(Node.create('c'), Node.create('d')),
-        Edge.create(Node.create('d'), Node.create('e'))
-      ];
+      var eab = Edge.create(na, nb),
+          ebc = Edge.create(nb, nc),
+          ecd = Edge.create(nc, nd),
+          ede = Edge.create(nd, ne);
+
+      var expPath = [eab, ebc, ecd, ede];
 
       assert.deepEqual(path, expPath);
-      assert.deepEqual(cycler.getVisited(), expVisited);
     });
   });
 
@@ -229,107 +228,6 @@ describe('euly', function() {
 
       var edge = cycler._nextUnvisited(startNode);
       assert.deepEqual(edge, expUnvisited);
-    });
-  });
-
-  describe('merge paths', function () {
-    it('works', function () {
-      var graphText = [
-        'a -> b, c',
-        'b -> a, c',
-      ].join('\n');
-
-      var graph = Graph.create(graphText);
-      var cycler = EulyCycler.create(graph);
-
-      var path1 = [Node.create('a'), Node.create('b'), Node.create('c')];
-      var path2 = [Node.create('c'), Node.create('d'), Node.create('e')];
-      var expPath = [Node.create('a'), Node.create('b'), Node.create('c'),
-                     Node.create('d'), Node.create('e')];
-
-      var mergedPath = cycler._mergePaths(path1, path2);
-
-      assert.deepEqual(mergedPath, expPath);
-
-    });
-
-    it('1st path empty returns 2nd path', function() {
-      var graphText = [
-        'a -> b, c',
-        'b -> a, c',
-      ].join('\n');
-
-      var graph = Graph.create(graphText);
-      var cycler = EulyCycler.create(graph);
-
-      var path1 = [];
-      var path2 = [Node.create('a'), Node.create('b'), Node.create('c')];
-
-      var mergedPath = cycler._mergePaths(path1, path2);
-
-      assert.deepEqual(mergedPath, path2);
-    });
-
-
-    it('2nd path empty returns 1st path', function() {
-      var graphText = [
-        'a -> b, c',
-        'b -> a, c',
-      ].join('\n');
-
-      var graph = Graph.create(graphText);
-      var cycler = EulyCycler.create(graph);
-
-      var path1 = [Node.create('a'), Node.create('b'), Node.create('c')];
-      var path2 = [];
-
-      var mergedPath = cycler._mergePaths(path1, path2);
-
-      assert.deepEqual(mergedPath, path1);
-    });
-  });
-
-  describe('observe paths', function () {
-    it('simple - called once', function () {
-      var graphText = [
-        'a -> b',
-        'b -> a',
-      ].join('\n');
-
-      var graph = Graph.create(graphText);
-      var cycler = EulyCycler.create(graph);
-
-      var obsPath = [];
-      cycler.addPathListener(function(path) {
-        obsPath = path
-      });
-
-      cycler.eulerianCycle();
-
-      var expPath = [Node.create('a'), Node.create('b'), Node.create('a')];
-
-      assert.deepEqual(obsPath, expPath);
-    });
-
-    it('called multiple times', function () {
-      var graphText = [
-        'a -> b',
-        'b -> a, c',
-        'c -> b'
-      ].join('\n');
-
-      var graph = Graph.create(graphText);
-      var cycler = EulyCycler.create(graph);
-
-      var obsPaths = cycler.eulerianCycleIntermediate();
-
-      var expPaths = [
-        [Node.create('a'), Node.create('b'), Node.create('a')],
-        [Node.create('b'), Node.create('a'), Node.create('b'),
-         Node.create('c'), Node.create('b')]
-      ];
-
-      assert.deepEqual(obsPaths, expPaths);
     });
   });
 

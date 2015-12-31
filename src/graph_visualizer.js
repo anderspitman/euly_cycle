@@ -28,8 +28,8 @@ d3.select('#run_button').on("click", function() {
 
   var graph = Graph.create(textBox.text());
   var cycler = EulyCycler.create(graph);
-  var paths = cycler.eulerianCycleIntermediate();
-  var edgePaths = cycler._edgePaths;
+  cycler.eulerianCycle();
+  var edgePaths = cycler.getAllEdgePaths();
   changeColorEdge(edgePaths, 0, 0);
 });
 

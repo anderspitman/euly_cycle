@@ -9,9 +9,7 @@
   var EulyCycler = function(graph) {
     this._graph = graph;
     this._visited = [];
-    this._pathListeners = [];
     this._edgePaths = [];
-    this._edgePath = [];
   };
 
   EulyCycler.create = function(graph) {
@@ -19,24 +17,20 @@
   };
 
   EulyCycler.prototype.eulerianCycle = function() {
-    var eulerianPath = [];
     var eulerianEdgePath = [];
     var firstNodeInGraph = this._graph.getNodes()[0];
     var nextNodeWithOpenExit = firstNodeInGraph;
 
     while (true) {
-      var path = this._walkUntilStuck(nextNodeWithOpenExit);
-      eulerianPath = this._mergePaths(eulerianPath, path);
-      this._notifyPathListeners(eulerianPath);
-      nextNodeWithOpenExit = this._findNodeWithOpenExit(eulerianPath);
+      var edgePath = this._walkUntilStuck(nextNodeWithOpenExit);
 
-      eulerianEdgePath = this._mergeEdgePaths(eulerianEdgePath, this._edgePath);
+      eulerianEdgePath = eulerianEdgePath.concat(edgePath);
       this._edgePaths.push(eulerianEdgePath);
       var edgeThatSharesOpen = this._findEdgeThatSharesOpen(eulerianEdgePath);
 
-      if (Node.isValid(nextNodeWithOpenExit)) {
-        eulerianPath = this._remakePathFromNewStartNode(
-          eulerianPath, nextNodeWithOpenExit);
+
+      if (Edge.isValid(edgeThatSharesOpen)) {
+        nextNodeWithOpenExit = edgeThatSharesOpen.getFromNode();
         eulerianEdgePath = this._remakePathFromNewStartEdge(
           eulerianEdgePath, edgeThatSharesOpen);
       }
@@ -45,22 +39,7 @@
       }
     }
 
-
-    return eulerianPath;
-  };
-
-  EulyCycler.prototype.eulerianCycleIntermediate = function() {
-    var intermediatePaths = [];
-    this.addPathListener(function(path) {
-      intermediatePaths.push(path);
-    });
-
-    this.eulerianCycle();
-    return intermediatePaths;
-  };
-
-  EulyCycler.prototype.addPathListener = function(callback) {
-    this._pathListeners.push(callback);
+    return this._nodePathFromEdgePath(eulerianEdgePath);
   };
 
   EulyCycler.prototype.getCurrentNode = function() {
@@ -73,66 +52,39 @@
 
   EulyCycler.prototype.traverseEdge = function(edge) {
     this.setCurrentNode(edge.getToNode());
-    this._visit(edge);
+    this._visited.push(edge);
   };
 
-  EulyCycler.prototype.getVisited = function(node) {
+  EulyCycler.prototype.getVisited = function() {
     return this._visited;
   };
 
-  EulyCycler.prototype._notifyPathListeners = function(path) {
-    for (var i=0; i<this._pathListeners.length; i++) {
-      var listener = this._pathListeners[i];
-      listener(path);
+  EulyCycler.prototype.getAllEdgePaths = function() {
+    return this._edgePaths;
+  };
+
+  EulyCycler.prototype.pathToString = function(path) {
+    var string = '';
+    for (var i=0; i<path.length; i++) {
+      var node = path[i];
+      string += (node.getName() + '->');
     }
+    return string;
   };
 
   EulyCycler.prototype._walkUntilStuck = function(startNode) {
-    var visitedNodes = [startNode];
-    var visitedEdges = [];
-    this._edgePath = [];
+    var edgePath = [];
 
     this.setCurrentNode(startNode);
     var unvisitedEdge = this._nextUnvisited(startNode);
 
     while (Edge.isValid(unvisitedEdge)) {
       this.traverseEdge(unvisitedEdge);
-      visitedEdges.push(unvisitedEdge);
-      visitedNodes.push(unvisitedEdge.getToNode());
-      this._edgePath.push(unvisitedEdge);
+      edgePath.push(unvisitedEdge);
       unvisitedEdge = this._nextUnvisited(unvisitedEdge.getToNode());
     }
 
-    //this._edgePaths.push(visitedEdges);
-    return visitedNodes;
-  };
-
-  EulyCycler.prototype._mergePaths = function(path1, path2) {
-    if (path1.length === 0) {
-      return path2;
-    }
-    else if (path2.length === 0) {
-      return path1;
-    }
-    else {
-      return path1.concat(path2.slice(1));
-    }
-  };
-
-  EulyCycler.prototype._mergeEdgePaths = function(path1, path2) {
-    if (path1.length === 0) {
-      return path2;
-    }
-    else if (path2.length === 0) {
-      return path1;
-    }
-    else {
-      return path1.concat(path2);
-    }
-  };
-
-  EulyCycler.prototype._visit = function(edge) {
-    this._visited.push(edge);
+    return edgePath;
   };
 
   EulyCycler.prototype._nextUnvisited = function(fromNode) {
@@ -199,14 +151,6 @@
     return false;
   };
 
-  EulyCycler.prototype._remakePathFromNewStartNode = function(path, newStart) {
-    var index = this._indexOfComparable(path, newStart);
-    var sliceIndexToEnd = path.slice(index, path.length-1);
-    var sliceBeginningToIndex = path.slice(0, index+1);
-    var newPath = sliceIndexToEnd.concat(sliceBeginningToIndex);
-    return newPath;
-  };
-
   EulyCycler.prototype._remakePathFromNewStartEdge = function(path, newStart) {
     var index = this._indexOfComparable(path, newStart);
     var sliceIndexToEnd = path.slice(index);
@@ -224,13 +168,18 @@
     throw new Error('index not found');
   };
 
-  EulyCycler.prototype.pathToString = function(path) {
-    var string = '';
-    for (var i=0; i<path.length; i++) {
-      var node = path[i];
-      string += (node.getName() + '->');
+  EulyCycler.prototype._nodePathFromEdgePath = function(edgePath) {
+    var nodePath = [];
+    for (var i=0; i<edgePath.length; i++) {
+      var edge = edgePath[i];
+      var node = edge.getFromNode();
+      nodePath.push(node);
     }
-    return string;
+    var lastEdge = edgePath[edgePath.length - 1];
+    var lastNode = lastEdge.getToNode();
+    nodePath.push(lastNode);
+
+    return nodePath;
   };
 
 
