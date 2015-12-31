@@ -26,7 +26,7 @@
   var Edge = function(fromNode, toNode) {
     this._fromNode = fromNode;
     this._toNode = toNode;
-    this._id = 0;
+    this._index = 0;
   };
 
   Edge.create = function(fromNode, toNode) {
@@ -48,7 +48,7 @@
   Edge.prototype.equals = function(other) {
     return this._fromNode.equals(other._fromNode) &&
            this._toNode.equals(other._toNode) &&
-           this._id === other._id;
+           this._index === other._index;
   };
 
   Edge.prototype.connectsSameNodesAs = function(other) {
@@ -56,12 +56,12 @@
            this._toNode.equals(other._toNode);
   };
 
-  Edge.prototype.setId = function(id) {
-    this._id = id;
+  Edge.prototype.setIndex = function(id) {
+    this._index = id;
   };
 
-  Edge.prototype.getId = function() {
-    return this._id;
+  Edge.prototype.getIndex = function() {
+    return this._index;
   };
 
   var Graph = function(text) {
@@ -105,7 +105,7 @@
       // Multiple edges between the nodes
       if (outlink === prev) {
         ++id;
-        edge.setId(id);
+        edge.setIndex(id);
       }
       else {
         id = 0;

@@ -332,4 +332,23 @@ describe('euly', function() {
       assert.deepEqual(obsPaths, expPaths);
     });
   });
+
+  describe('remake node path', function () {
+    it('works', function () {
+      var cycler = EulyCycler.create({});
+
+      var n1 = Node.create('1'),
+          n2 = Node.create('2'),
+          n3 = Node.create('3');
+      var e1 = Edge.create(n1, n2),
+          e2 = Edge.create(n2, n3),
+          e3 = Edge.create(n3, n1);
+
+      var edgePath = [e1, e2, e3],
+          expPath = [e2, e3, e1],
+          obsPath = cycler._remakePathFromNewStartEdge(edgePath, e2);
+
+      assert.deepEqual(obsPath, expPath);
+    });
+  });
 });

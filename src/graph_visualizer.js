@@ -11,9 +11,11 @@ var circleRadius = 10;
 
 var graphText = [
   '0 -> 1,1',
-  '1 -> 2,2',
-  '2 -> 3,3',
-  '3 -> 0,0',
+  '1 -> 2,2,4',
+  '2 -> 3,3,5',
+  '3 -> 0,0,2',
+  '4 -> 1',
+  '5 -> 3',
 ].join('\n');
 
 
@@ -22,34 +24,54 @@ textBox.text(graphText);
 
 d3.select('#run_button').on("click", function() {
   d3.selectAll("circle").style("fill", startColor);
+  d3.selectAll(".link").style("stroke", startColor);
 
   var graph = Graph.create(textBox.text());
   var cycler = EulyCycler.create(graph);
   var paths = cycler.eulerianCycleIntermediate();
   var edgePaths = cycler._edgePaths;
-  changeColor(paths, 0, 0);
+  changeColorEdge(edgePaths, 0, 0);
 });
 
-function changeColor(paths, pathIdx, nodeIdx) {
+function changeColorEdge(paths, pathIdx, edgeIdx) {
   var path = paths[pathIdx];
-  var node = path[nodeIdx];
-  var selector = '#node_' + node.getName();
-  var circle = d3.select(selector).select("circle");
-  
-  circle
+  var edge = path[edgeIdx];
+
+  var fromName = edge.getFromNode().getName();
+  var toName = edge.getToNode().getName();
+  var id = fromName + '_' + toName + '_' + edge.getIndex();
+
+  var selector = '#path_' + id;
+  var arrow = d3.select(selector);
+
+  var toNodeCircle = d3.select('#node_' + toName).select("circle");
+
+  arrow
     .transition()
     .duration(400)
+    .style("stroke", activeColor)
+    .transition()
+    .style("stroke", visitedColor);
+
+  toNodeCircle
+    .transition()
+    .duration(400)
+    .delay(400)
     .style("fill", activeColor)
     .transition()
     .style("fill", visitedColor);
 
   setTimeout(function() {
-    var nextNodeIdx = -1;
+    var nextEdgeIdx = -1;
     var nextPathIdx = pathIdx;
 
-    if (nodeIdx === path.length - 1) {
-      nextNodeIdx = 0;
+    if (edgeIdx === path.length - 1) {
+      nextEdgeIdx = 0;
       nextPathIdx = pathIdx + 1; 
+      d3.selectAll(".link")
+        .transition()
+        .delay(200)
+        .style("stroke", startColor);
       d3.selectAll("circle")
         .transition()
         .delay(200)
@@ -59,9 +81,9 @@ function changeColor(paths, pathIdx, nodeIdx) {
       }
     }
     else {
-      nextNodeIdx = nodeIdx + 1;
+      nextEdgeIdx = edgeIdx + 1;
     }
-    changeColor(paths, nextPathIdx, nextNodeIdx);
+    changeColorEdge(paths, nextPathIdx, nextEdgeIdx);
   }, delayBetween);
 }
 
@@ -76,6 +98,9 @@ function doGraph() {
 
   var width = 960,
       height = 544;
+
+  // Remove any prior graph
+  d3.select(".mainSvg").remove();
 
   var svg = d3.select(".graph-wrapper").append("svg")
       .attr("class", "mainSvg")

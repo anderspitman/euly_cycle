@@ -9,13 +9,14 @@
         var edge = graphEdges[i];
         var duplicateEdgesCount = countDuplicateEdges(edge, graphEdges);
 
-        var curveType = determineCurveType(duplicateEdgesCount, edge.getId());
+        var curveType = determineCurveType(duplicateEdgesCount,
+                                           edge.getIndex());
         var curveWeight = computeCurveWeight(duplicateEdgesCount,
-                                             edge.getId());
+                                             edge.getIndex());
         
         var fromName = edge.getFromNode().getName();
         var toName = edge.getToNode().getName();
-        var id = fromName + '_' + toName + '_' + edge.getId();
+        var id = fromName + '_' + toName + '_' + edge.getIndex();
 
         links.push({
             'source': indexOfNode(edge.getFromNode(), graphNodes),

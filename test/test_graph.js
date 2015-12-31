@@ -79,7 +79,7 @@ describe('graph', function() {
       var outgoingEdges = graph.getOutgoingEdges(node);
 
       var secondEdge = Edge.create(node, Node.create('b'));
-      secondEdge.setId(1);
+      secondEdge.setIndex(1);
 
       var expOutgoingEdges = [
         Edge.create(node, Node.create('b')),
@@ -99,7 +99,7 @@ describe('graph', function() {
       var outgoingEdges = graph.getOutgoingEdges(node);
 
       var secondEdge = Edge.create(node, Node.create('b'));
-      secondEdge.setId(1);
+      secondEdge.setIndex(1);
 
       var expOutgoingEdges = [
         Edge.create(node, Node.create('b')),
@@ -147,6 +147,7 @@ describe('edge', function() {
       assert.deepEqual(fromNode, edge.getFromNode());
       assert.deepEqual(toNode, edge.getToNode());
     });
+  });
 
   describe('equality', function() {
     it('works', function() {
@@ -159,11 +160,10 @@ describe('edge', function() {
     it('depends on id', function() {
       var edge1 = Edge.create(Node.create('a'), Node.create('b'));
       var edge2 = Edge.create(Node.create('a'), Node.create('b'));
-      edge2.setId(1);
+      edge2.setIndex(1);
 
       assert(!edge1.equals(edge2));
     });
 
-  });
   });
 });
