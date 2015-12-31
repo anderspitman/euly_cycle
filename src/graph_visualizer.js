@@ -25,8 +25,9 @@ textBox.text(graphText);
 d3.select('#run_button').on("click", function() {
   d3.selectAll("circle").style("fill", startColor);
   d3.selectAll(".link").style("stroke", startColor);
+  var text = document.getElementById('text_box').value;
 
-  var graph = Graph.create(textBox.text());
+  var graph = Graph.create(text);
   var cycler = EulyCycler.create(graph);
   cycler.eulerianCycle();
   var edgePaths = cycler.getAllEdgePaths();
@@ -92,7 +93,8 @@ d3.select('#graph_button').on('click', doGraph);
     
 function doGraph() {
 
-  var graph = Graph.create(textBox.text());
+  var text = document.getElementById('text_box').value;
+  var graph = Graph.create(text);
   var nodes = graphToD3.buildNodes(graph.getNodes());
   var links = graphToD3.buildLinks(graph.getEdges(), graph.getNodes());
 
