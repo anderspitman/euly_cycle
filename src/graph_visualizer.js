@@ -27,7 +27,6 @@ d3.select('#run_button').on("click", function() {
   var cycler = EulyCycler.create(graph);
   var paths = cycler.eulerianCycleIntermediate();
   var edgePaths = cycler._edgePaths;
-  console.log(edgePaths);
   changeColor(paths, 0, 0);
 });
 
@@ -72,13 +71,8 @@ d3.select('#graph_button').on('click', doGraph);
 function doGraph() {
 
   var graph = Graph.create(textBox.text());
-
   var nodes = graphToD3.buildNodes(graph.getNodes());
   var links = graphToD3.buildLinks(graph.getEdges(), graph.getNodes());
-
-  console.log(nodes);
-  console.log(links);
-
 
   var width = 960,
       height = 544;
@@ -133,7 +127,7 @@ function doGraph() {
   var link = svg.selectAll(".link")
       .data(force.links())
     .enter().append("path")
-      .attr("id", function(d,i) { return "path"+i; })
+      .attr("id", function(d,i) { return "path_" + d.id; })
       .attr("class", "link")
       .attr("marker-end", "url(#arrowhead)");
 

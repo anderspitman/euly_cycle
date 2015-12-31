@@ -4,37 +4,23 @@
   var graphToD3 = (function() {
 
     function publicBuildLinks(graphEdges, graphNodes) {
-      var counts = {};
       var links = [];
       for (var i=0; i<graphEdges.length; i+=1) {
         var edge = graphEdges[i];
-        var countKey = buildCountKey(edge);
-        if (!(countKey in counts)) {
-          counts[countKey] = {
-            'count': 0,
-            'possible': countPossible(countKey, graphEdges)
-          };
-        }
-        counts[countKey].count += 1;
-        var curveType = 'straight';
-        var possible = counts[countKey].possible;
-        var countIdx = counts[countKey].count - 1;
-        var curveWeight = (1.0 / possible) * 
-          ((counts[countKey].count + (counts[countKey].count % 2)) / 2);
-        if (possible === 1 || ((possible % 2 !== 0) && countIdx === possible-1)) {
-          curveType = 'straight';
-        }
-        else {
-          if (countIdx % 2 === 0) {
-            curveType = 'left';
-          }
-          else {
-            curveType = 'right';
-          }
-        }
+        var duplicateEdgesCount = countDuplicateEdges(edge, graphEdges);
+
+        var curveType = determineCurveType(duplicateEdgesCount, edge.getId());
+        var curveWeight = computeCurveWeight(duplicateEdgesCount,
+                                             edge.getId());
+        
+        var fromName = edge.getFromNode().getName();
+        var toName = edge.getToNode().getName();
+        var id = fromName + '_' + toName + '_' + edge.getId();
+
         links.push({
             'source': indexOfNode(edge.getFromNode(), graphNodes),
             'target': indexOfNode(edge.getToNode(), graphNodes),
+            'id': id,
             'curve_type': curveType,
             'curve_weight': curveWeight
         });
@@ -42,23 +28,41 @@
       return links;
     }
 
-    function buildCountKey(edge) {
-      var countKey = edge.getFromNode().getName() + '_to_' + 
-        edge.getToNode().getName();
-      return countKey;
+    function determineCurveType(duplicateEdgesCount, edgeId) {
+
+      var curveType = 'straight';
+      if (duplicateEdgesCount === 1 ||
+          ((duplicateEdgesCount % 2 !== 0) &&
+            edgeId === duplicateEdgesCount-1)) {
+        curveType = 'straight';
+      }
+      else {
+        if (edgeId % 2 === 0) {
+          curveType = 'left';
+        }
+        else {
+          curveType = 'right';
+        }
+      }
+
+      return curveType;
     }
 
-    function countPossible(countKey, edges) {
+    function computeCurveWeight(duplicateEdgesCount, edgeId) {
+      var count = edgeId + 1;
+      return (1.0 / duplicateEdgesCount) * ((count + (count % 2)) / 2);
+    }
+
+    function countDuplicateEdges(edge, allEdges) {
       var count = 0;
-      for (var i=0; i<edges.length; i++) {
-        var key = buildCountKey(edges[i]);
-        if (countKey === key) {
-          count += 1;
+      for (var i=0; i<allEdges.length; i++) {
+        if (edge.connectsSameNodesAs(allEdges[i])) {
+          count++;
         }
       }
       return count;
     }
-
+    
     function indexOfNode(nodeToFind, nodes) {
       for (var i=0; i<nodes.length; i++) {
         var node = nodes[i];

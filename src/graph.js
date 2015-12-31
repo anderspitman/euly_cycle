@@ -51,8 +51,17 @@
            this._id === other._id;
   };
 
+  Edge.prototype.connectsSameNodesAs = function(other) {
+    return this._fromNode.equals(other._fromNode) &&
+           this._toNode.equals(other._toNode);
+  };
+
   Edge.prototype.setId = function(id) {
     this._id = id;
+  };
+
+  Edge.prototype.getId = function() {
+    return this._id;
   };
 
   var Graph = function(text) {
