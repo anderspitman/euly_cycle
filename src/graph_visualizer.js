@@ -24,9 +24,10 @@ d3.select('#run_button').on("click", function() {
   d3.selectAll("circle").style("fill", startColor);
 
   var graph = Graph.create(textBox.text());
-  console.log(graph._getGraph());
   var cycler = EulyCycler.create(graph);
   var paths = cycler.eulerianCycleIntermediate();
+  var edgePaths = cycler._edgePaths;
+  console.log(edgePaths);
   changeColor(paths, 0, 0);
 });
 
@@ -42,9 +43,6 @@ function changeColor(paths, pathIdx, nodeIdx) {
     .style("fill", activeColor)
     .transition()
     .style("fill", visitedColor);
-  //setTimeout(function() {
-  //  circle.style("fill", "grey");
-  //}, 200);
 
   setTimeout(function() {
     var nextNodeIdx = -1;
@@ -73,9 +71,14 @@ d3.select('#graph_button').on('click', doGraph);
     
 function doGraph() {
 
-  var new_graph = graphToD3.setFromText(textBox.text());
-  var nodes = graphToD3.getNodes();
-  var links = graphToD3.getLinks();
+  var graph = Graph.create(textBox.text());
+
+  var nodes = graphToD3.buildNodes(graph.getNodes());
+  var links = graphToD3.buildLinks(graph.getEdges(), graph.getNodes());
+
+  console.log(nodes);
+  console.log(links);
+
 
   var width = 960,
       height = 544;

@@ -72,6 +72,18 @@
     return nodes;
   };
 
+  Graph.prototype.getEdges = function() {
+    var nodes = this.getNodes();
+    var edges = [];
+
+    for (var i=0; i<nodes.length; i++) {
+      var node = nodes[i];
+      var outgoingEdges = this.getOutgoingEdges(node);
+      edges = edges.concat(outgoingEdges);
+    }
+    return edges;
+  };
+
   Graph.prototype.getOutgoingEdges = function(fromNode) {
     var outlinks = this._graph[fromNode.getName()];
 

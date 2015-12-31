@@ -10,6 +10,7 @@
     this._graph = graph;
     this._visited = [];
     this._pathListeners = [];
+    this._edgePaths = [];
   };
 
   EulyCycler.create = function(graph) {
@@ -79,16 +80,19 @@
 
   EulyCycler.prototype._walkUntilStuck = function(startNode) {
     var visitedNodes = [startNode];
+    var visitedEdges = [];
 
     this.setCurrentNode(startNode);
     var unvisitedEdge = this._nextUnvisited(startNode);
 
     while (Edge.isValid(unvisitedEdge)) {
       this.traverseEdge(unvisitedEdge);
+      visitedEdges.push(unvisitedEdge);
       visitedNodes.push(unvisitedEdge.getToNode());
       unvisitedEdge = this._nextUnvisited(unvisitedEdge.getToNode());
     }
 
+    this._edgePaths.push(visitedEdges);
     return visitedNodes;
   };
 
@@ -110,7 +114,6 @@
 
   EulyCycler.prototype._nextUnvisited = function(fromNode) {
     var outgoingEdges = this._graph.getOutgoingEdges(fromNode);
-    console.log(outgoingEdges);
 
     for (var i=0; i<outgoingEdges.length; i++) {
       var edge = outgoingEdges[i];
