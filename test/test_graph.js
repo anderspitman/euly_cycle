@@ -65,9 +65,48 @@ describe('graph', function() {
         Edge.create(node, Node.create('b')),
         Edge.create(node, Node.create('c'))
       ];
-
-      //var expOutgoingEdges = [Node.create('b'), Node.create('c')];
       
+      assert.deepEqual(outgoingEdges, expOutgoingEdges);
+    });
+
+    it('multiple edges between 2 nodes', function() {
+      var graphText = [
+        'a -> b, b'
+      ].join('\n');
+
+      var graph = Graph.create(graphText);
+      var node = Node.create('a');
+      var outgoingEdges = graph.getOutgoingEdges(node);
+
+      var secondEdge = Edge.create(node, Node.create('b'));
+      secondEdge.setId(1);
+
+      var expOutgoingEdges = [
+        Edge.create(node, Node.create('b')),
+        secondEdge
+      ];
+
+      assert.deepEqual(outgoingEdges, expOutgoingEdges);
+    });
+
+    it('multiple edges between multiple nodes', function() {
+      var graphText = [
+        'a -> b, b, c',
+      ].join('\n');
+
+      var graph = Graph.create(graphText);
+      var node = Node.create('a');
+      var outgoingEdges = graph.getOutgoingEdges(node);
+
+      var secondEdge = Edge.create(node, Node.create('b'));
+      secondEdge.setId(1);
+
+      var expOutgoingEdges = [
+        Edge.create(node, Node.create('b')),
+        secondEdge,
+        Edge.create(node, Node.create('c'))
+      ];
+
       assert.deepEqual(outgoingEdges, expOutgoingEdges);
     });
   });
@@ -87,6 +126,8 @@ describe('node', function() {
     });
   });
 });
+
+
 describe('edge', function() {
   describe('creation', function() {
     it('works', function() {
@@ -106,5 +147,23 @@ describe('edge', function() {
       assert.deepEqual(fromNode, edge.getFromNode());
       assert.deepEqual(toNode, edge.getToNode());
     });
+
+  describe('equality', function() {
+    it('works', function() {
+      var edge1 = Edge.create(Node.create('a'), Node.create('b'));
+      var edge2 = Edge.create(Node.create('a'), Node.create('b'));
+
+      assert(edge1.equals(edge2));
+    });
+
+    it('depends on id', function() {
+      var edge1 = Edge.create(Node.create('a'), Node.create('b'));
+      var edge2 = Edge.create(Node.create('a'), Node.create('b'));
+      edge2.setId(1);
+
+      assert(!edge1.equals(edge2));
+    });
+
+  });
   });
 });

@@ -26,6 +26,7 @@
   var Edge = function(fromNode, toNode) {
     this._fromNode = fromNode;
     this._toNode = toNode;
+    this._id = 0;
   };
 
   Edge.create = function(fromNode, toNode) {
@@ -46,7 +47,12 @@
 
   Edge.prototype.equals = function(other) {
     return this._fromNode.equals(other._fromNode) &&
-           this._toNode.equals(other._toNode);
+           this._toNode.equals(other._toNode) &&
+           this._id === other._id;
+  };
+
+  Edge.prototype.setId = function(id) {
+    this._id = id;
   };
 
   var Graph = function(text) {
@@ -69,11 +75,23 @@
   Graph.prototype.getOutgoingEdges = function(fromNode) {
     var outlinks = this._graph[fromNode.getName()];
 
+    var id = 0;
     var edges = [];
     for (var i=0; i<outlinks.length; i++) {
       var outlink = outlinks[i];
       var edge = new Edge(fromNode, new Node(outlink));
+      
+      // Multiple edges between the nodes
+      if (outlink === prev) {
+        ++id;
+        edge.setId(id);
+      }
+      else {
+        id = 0;
+      }
+
       edges.push(edge);
+      var prev = outlink;
     }
     return edges;
   };

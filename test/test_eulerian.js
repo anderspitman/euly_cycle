@@ -175,7 +175,7 @@ describe('euly', function() {
       var node = Node.create('a');
       cycler.setCurrentNode(node);
       var toNode = Node.create('b');
-      cycler.goTo(toNode);
+      cycler.traverseEdge(Edge.create(node, toNode));
       var expVisited = [Edge.create(node, toNode)];
 
       assert(toNode.equals(cycler.getCurrentNode()));

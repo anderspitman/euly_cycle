@@ -10,16 +10,10 @@ var delayBetween = 1000;
 var circleRadius = 10;
 
 var graphText = [
-  '0 -> 3',
-  '1 -> 0',
-  '2 -> 1,6',
-  '3 -> 2',
-  '4 -> 2',
-  '5 -> 4',
-  '6 -> 5,8',
-  '7 -> 9',
-  '8 -> 7',
-  '9 -> 6'
+  '0 -> 1,1',
+  '1 -> 2,2',
+  '2 -> 3,3',
+  '3 -> 0,0',
 ].join('\n');
 
 
@@ -30,6 +24,7 @@ d3.select('#run_button').on("click", function() {
   d3.selectAll("circle").style("fill", startColor);
 
   var graph = Graph.create(textBox.text());
+  console.log(graph._getGraph());
   var cycler = EulyCycler.create(graph);
   var paths = cycler.eulerianCycleIntermediate();
   changeColor(paths, 0, 0);
@@ -109,7 +104,7 @@ function doGraph() {
       .attr("height", height);
 
   var force = d3.layout.force()
-      .gravity(.1)
+      .gravity(0.1)
       .distance(50)
       .charge(-2000)
       .size([width, height])
